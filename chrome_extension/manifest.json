@@ -1,0 +1,16 @@
+{
+    "name": "socialmediahub",
+    "version": "1.0.0",
+    "description": "Keep track of your social media usage",
+    "manifest_version": 3,
+    "content_scripts" : [{
+        "matches": ["*://*.youtube.com/shorts/*"],
+        "all_frames": true,
+        "js": ["YtShortsScraper.js","content_script.js"]
+    }],
+    "author": "Michael G.",
+    "action":{
+        "default_popup": "index.html",
+        "default_title": "socialmediahub.pro"
+    }
+}

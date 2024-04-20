@@ -1,0 +1,763 @@
+[
+    {
+      "id": 1,
+      "coords": "G-18",
+      "name": "Black Barrow Black BarrowBlack BarrowBlack BarrowBlack BarrowBlack BarrowBlack BarrowBlack BarrowBlack BarrowBlack Barrow",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": [2, 3]
+    },
+    {
+      "id": 2,
+      "coords": "G-11",
+      "name": "Black Lair",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 3,
+      "coords": "G-3",
+      "name": "Inox Encampment",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": [4, 5]
+    },
+    {
+      "id": 4,
+      "coords": "E-11",
+      "name": "Crypt of the Damned",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 5,
+      "coords": "D-6",
+      "name": "Ruinous Crypt",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 6,
+      "coords": "F-18",
+      "name": "Decaying Crypt",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 7,
+      "coords": "C-12",
+      "name": "Vibrant Grotto",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 8,
+      "coords": "C-18",
+      "name": "Gloomhaven Warehouse",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 9,
+      "coords": "L-2",
+      "name": "Diamond Mine",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 10,
+      "coords": "C-7",
+      "name": "Plane of Elemental Power",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 11,
+      "coords": "B-16",
+      "name": "Gloomhaven Square A",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 12,
+      "coords": "B-16",
+      "name": "Gloomhaven Square B",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 13,
+      "coords": "N-3",
+      "name": "Temple of the Seer",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 14,
+      "coords": "C-18",
+      "name": "Frozen Hollow",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 15,
+      "coords": "B-11",
+      "name": "Shrine of Strength",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 16,
+      "coords": "B-6",
+      "name": "Mountain Pass",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 17,
+      "coords": "K-17",
+      "name": "Lost Island",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 18,
+      "coords": "C-14",
+      "name": "Abandoned Sewers",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 19,
+      "coords": "M-7",
+      "name": "Forgotten Crypt",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 20,
+      "coords": "H-13",
+      "name": "Necromancer's Sanctum",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 21,
+      "coords": "C-7",
+      "name": "Infernal Throne",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 22,
+      "coords": "K-8",
+      "name": "Temple of the Elements",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 23,
+      "coords": "C-15",
+      "name": "Deep Ruins",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 24,
+      "coords": "C-6",
+      "name": "Echo Chamber",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 25,
+      "coords": "A-5",
+      "name": "Icecrag Ascent",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 26,
+      "coords": "D-15",
+      "name": "Ancient Cistern",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 27,
+      "coords": "E-6",
+      "name": "Ruinous Rift",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 28,
+      "coords": "E-4",
+      "name": "Outer Ritual Chamber",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 29,
+      "coords": "E-3",
+      "name": "Sanctuary of Gloom",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 30,
+      "coords": "N-15",
+      "name": "Shrine of the Depths",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 31,
+      "coords": "A-16",
+      "name": "Plane of Night",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 32,
+      "coords": "L-11",
+      "name": "Decrepit Wood",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 33,
+      "coords": "A-7",
+      "name": "Savvas Armory",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 34,
+      "coords": "A-4",
+      "name": "Scorched Summit",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 35,
+      "coords": "A-14",
+      "name": "Gloomhaven Battlements A",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 36,
+      "coords": "B-14",
+      "name": "Gloomhaven Battlements B",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 37,
+      "coords": "G-18",
+      "name": "Doom Trench",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 38,
+      "coords": "G-2",
+      "name": "Slave Pens",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 39,
+      "coords": "B-11",
+      "name": "Treacherous Divide",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 40,
+      "coords": "F-12",
+      "name": "Anchient Defense Network",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 41,
+      "coords": "F-13",
+      "name": "Timeworn Tomb",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 42,
+      "coords": "C-5",
+      "name": "Realm of the Voice",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 43,
+      "coords": "D-4",
+      "name": "Drake Nest",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 44,
+      "coords": "F-3",
+      "name": "Tribal Assault",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 45,
+      "coords": "M-9",
+      "name": "Rebel Swamp",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 46,
+      "coords": "A-11",
+      "name": "Nightmare Peak",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 47,
+      "coords": "H-18",
+      "name": "Lair of the Unseeing Eye",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 48,
+      "coords": "E-1",
+      "name": "Shadow Weald",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 49,
+      "coords": "N-7",
+      "name": "Rebel's Stand",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 50,
+      "coords": "C-17",
+      "name": "Ghost Fortress",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 51,
+      "coords": "A-15",
+      "name": "The Void",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 52,
+      "coords": "D-14",
+      "name": "Noxious Cellar",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 53,
+      "coords": "F-11",
+      "name": "Crypt Basement",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 54,
+      "coords": "D-8",
+      "name": "Palace of Ice",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 55,
+      "coords": "G-5",
+      "name": "Foggy Thicket",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 56,
+      "coords": "G-4",
+      "name": "Bandits Wood",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 57,
+      "coords": "D-14",
+      "name": "Investigation",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 58,
+      "coords": "E-15",
+      "name": "Bloody Shack",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 59,
+      "coords": "F-1",
+      "name": "Forgotten Grove",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 60,
+      "coords": "B-15",
+      "name": "Alchemy Lab",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 61,
+      "coords": "N-11",
+      "name": "Fading Lighthouse",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 62,
+      "coords": "O-11",
+      "name": "Pit of Souls",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 63,
+      "coords": "M-1",
+      "name": "Magma Pit",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 64,
+      "coords": "K-16",
+      "name": "Underwater Lagoon",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 65,
+      "coords": "L-5",
+      "name": "Sulfur Mine",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 66,
+      "coords": "G-14",
+      "name": "Clockwork Cove",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 67,
+      "coords": "K-2",
+      "name": "Archane Library",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 68,
+      "coords": "N-8",
+      "name": "Toxic Moor",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 69,
+      "coords": "F-8",
+      "name": "Well of the Unfortunate",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 70,
+      "coords": "J-17",
+      "name": "Chained Isle",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 71,
+      "coords": "K-5",
+      "name": "Windswept Highlands",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 72,
+      "coords": "H-12",
+      "name": "Oozing Grove",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 73,
+      "coords": "N-5",
+      "name": "Rockslide Ridge",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 74,
+      "coords": "I-14",
+      "name": "Merchant Ship",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 75,
+      "coords": "G-12",
+      "name": "Overgrown Graveyard",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 76,
+      "coords": "L-3",
+      "name": "Harrower Hive",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 77,
+      "coords": "B-17",
+      "name": "Vault of Secrets",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 78,
+      "coords": "B-14",
+      "name": "Sacrifice Pit",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 79,
+      "coords": "K-12",
+      "name": "Lost Temple",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 80,
+      "coords": "K-1",
+      "name": "Vigil Keep",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 81,
+      "coords": "D-2",
+      "name": "Temple of the Eclipse",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 82,
+      "coords": "M-6",
+      "name": "Burning Mountain",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 83,
+      "coords": "C-15",
+      "name": "Shadows Within",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 84,
+      "coords": "D-12",
+      "name": "Crystalline Cave",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 85,
+      "coords": "M-3",
+      "name": "Sun Temple",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 86,
+      "coords": "D-15",
+      "name": "Harried Village",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 87,
+      "coords": "I-9",
+      "name": "Corrupted Cove",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 88,
+      "coords": "D-16",
+      "name": "Plane of Water",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 89,
+      "coords": "C-17",
+      "name": "Syndicate Hideout",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 90,
+      "coords": "J-7",
+      "name": "Demonic Rift",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 91,
+      "coords": "E-2",
+      "name": "Wild Melee",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 92,
+      "coords": "C-14",
+      "name": "Back Alley Brawl",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 93,
+      "coords": "N-17",
+      "name": "Sunken Vessel",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 94,
+      "coords": "F-12",
+      "name": "Vermling Nest",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    },
+    {
+      "id": 95,
+      "coords": "G-12",
+      "name": "Payment Due",
+      "unlocked": false,
+      "completed": false,
+      "scenarios_unlocked": []
+    }
+  ]
+  

@@ -1,0 +1,88 @@
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    font-size: 30px;
+    text-align: center;
+  }
+  
+  .flex-item-left {
+    background-color: #f1f1f1;
+    padding: 30px;
+    flex: 50%;
+  }
+  
+  .flex-item-middle {
+    background-color: #f1f1f1;
+    padding: 30px;
+    flex: 50%;
+  }
+  
+  .flex-item-right {
+    background-color: #f1f1f1;
+    padding: 30px;
+    flex: 50%;
+  }
+
+  @media (max-width: 800px) {
+    .flex-container {
+      flex-direction: column;
+    }
+  }
+
+  .callForActionImg {
+    display: block;
+    border: 0;
+    height: auto;
+    width: 40%;
+    padding: 10px
+  }
+
+ul{
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+}
+
+li{
+    margin-top: 10px;
+    font-family: "Poppins", sans-serif;
+    justify-content: left;
+    text-align: left;
+    font-size: 1.5vw;
+}
+  
+
+  li::before{
+    content: "";
+    background-image: url("https://i.postimg.cc/ht7g996V/check.png");
+    background-position: center;
+    background-size: cover;
+    opacity: 0.5;
+
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+    justify-content: left;
+    text-align: left;
+
+}
+
+.freeTrialButton {
+  height: 40px;
+  width: 250px;
+  font-size: 0.7em;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: #7D7C7C;
+  border: 2px solid darkgray;
+  border-radius: 50px;
+  background: transparent;
+}
+
+.freeTrialButton:hover{
+  color: whitesmoke;
+  transition: 0.5s;
+  border: none;
+  background: orange;
+}

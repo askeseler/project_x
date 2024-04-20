@@ -1,0 +1,13 @@
+tbody {
+    display: block;
+    height: 60vh;
+    overflow: auto;
+  }
+  
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: inherit;
+  }
+  
