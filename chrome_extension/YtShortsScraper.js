@@ -10,12 +10,8 @@ class YtShortsScraper {
         this.start_watch_time;
         this.date;
     }
-    
-    async scrape_account_name(){
-        return new Promise((resolve)=>{this.scrape_account_name_rek(true,()=>resolve("done"))})
-    }
 
-    scrape_account_name_rek(click, callback) {
+    scrape_account_name(click, callback) {
         if (this.accountname === undefined) {
             if (document.getElementById("avatar-btn") === null) {
                 //console.log("no avatar button");
@@ -30,7 +26,7 @@ class YtShortsScraper {
             else {
                 //console.log("No account name. Opening panel and trying again.")
                 if (click) document.getElementById("avatar-btn").children[0].children[0].click();
-                setTimeout(() => this.scrape_account_name_rek(false, callback), 100);
+                setTimeout(() => this.scrape_account_name(false, callback), 100);
             }
         }
         else callback();
@@ -103,47 +99,46 @@ class YtShortsScraper {
         let self = this;
 
         self.scrape_comments();
-        self.subtitles = await YtShortsScraper.get_subtitles(this.video_id);
-        await this.scrape_account_name()
-        self.scrape_title();
-        self.scrape_likes();
-        self.scrape_channel_name();
-        if (false) {
-            console.log(self.accountname);
-            console.log(self.video_id);
-            console.log(self.title);
-            console.log(self.subtitles);
-            console.log(self.comments);
-            console.log(self.n_comments);
-            console.log(self.likes);
-            console.log(self.channel_name);
-        };
-        //data = JSON.stringify(data);
-        let body = JSON.stringify({
-            'title': self.title,
-            'accountname': self.accountname,
-            'video_id': self.video_id,
-            'subtitles': self.subtitles,
-            'comments': JSON.stringify(self.comments),//self.comments,
-            'n_comments': self.n_comments,
-            'n_likes': self.likes,
-            'channel_name': self.channel_name,
-            'date': self.date,
-            'time_watched': self.time_watched
-        })        
+        this.scrape_account_name(true, () => {
+            self.scrape_title();
+            self.scrape_likes();
+            self.scrape_channel_name();
+            if (false) {
+                console.log(self.accountname);
+                console.log(self.video_id);
+                console.log(self.title);
+                console.log(self.subtitles);
+                console.log(self.comments);
+                console.log(self.n_comments);
+                console.log(self.likes);
+                console.log(self.channel_name);
+            };
+            //data = JSON.stringify(data);
+            let body = JSON.stringify({
+                'title': self.title,
+                'accountname': self.accountname,
+                'video_id': self.video_id,
+                'subtitles': self.subtitles,
+                'comments': JSON.stringify(self.comments),//self.comments,
+                'n_comments': self.n_comments,
+                'n_likes': self.likes,
+                'channel_name': self.channel_name,
+                'date': self.date,
+                'time_watched': self.time_watched
+            })        
         fetch('http://localhost:8081/add_item', {
-        method: 'POST',
-        headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        // body: '{\n  "no": 0,\n  "title": "string",\n  "content": "string",\n  "accountname": "string",\n  "video_id": "string",\n  "subtitles": "string",\n  "comments": "string",\n  "n_comments": 0,\n  "n_likes": 0,\n  "channel_name": "string",\n  "date": "string",\n  "time_watched": 0\n}',
-        body: body
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            // body: '{\n  "no": 0,\n  "title": "string",\n  "content": "string",\n  "accountname": "string",\n  "video_id": "string",\n  "subtitles": "string",\n  "comments": "string",\n  "n_comments": 0,\n  "n_likes": 0,\n  "channel_name": "string",\n  "date": "string",\n  "time_watched": 0\n}',
+            body: body
         }).then(res => {
-        if(res.status != 200)console.log("Request complete! response:", res);
+            if(res.status != 200)console.log("Request complete! response:", res);
         }).catch(()=>{ console.log("Date not sent.")});
-        
-        }
+        })
+    }
 
     static async get_subtitles(videoId, languageCode) {
         let subs = await (async () => {
@@ -180,11 +175,9 @@ class YtShortsScraper {
         try {
             YtShortsScraper.open_comments();
         } catch { };
-        if(false){
-            try {
-                this.subtitles = await YtShortsScraper.get_subtitles(video_id);
-            } catch { };
-        }
+        try {
+            this.subtitles = await YtShortsScraper.get_subtitles(video_id);
+        } catch { };
 
         var observer = new MutationObserver(async function (mutations) {
             element = document.getElementsByClassName("ytp-title-link")[0];
@@ -198,12 +191,10 @@ class YtShortsScraper {
                 try {
                     YtShortsScraper.open_comments();
                 } catch { };
-                if(false){
                 try {
                     self.subtitles = await YtShortsScraper.get_subtitles(video_id);
                 } catch { };
                 //console.log("subtitles retrieved");
-                }
             }
         });
 
