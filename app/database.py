@@ -1,6 +1,7 @@
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 from decouple import config
+import bcrypt
 
 MONGO_DETAILS = "mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb"#config("MONGO_DETAILS")  # read environment variable
 
@@ -8,6 +9,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
 database = client.items
 item_collection = database.get_collection("items_collection")
+user_collection = database.get_collection("user_collection")
 
 
 # helpers
@@ -73,3 +75,36 @@ async def delete_item_db(id: str):
     if item:
         await item_collection.delete_one({"_id": ObjectId(id)})
         return True
+
+def user2dict(data):
+    data["email"] = data["_id"]
+    del data["_id"]
+    del data["password"]
+    return data
+
+def user2item(data):
+    if not "username" in data.keys():
+        data["username"] = ""
+    data["_id"] = data["email"]
+    del data["email"]
+    return dict(data)
+
+# Add a new user into to the database
+async def add_user_db(data: dict) -> dict:
+    data["password"] = bcrypt.hashpw(data["password"].encode(), bcrypt.gensalt())
+    data = user2item(data)
+
+    found = await user_collection.find_one({"_id":data["_id"]})
+    if not found:
+        await user_collection.insert_one(data)
+    else:
+        await user_collection.replace_one(found, data)
+    return user2dict(data)
+
+async def verify_user_db(data: dict) -> bool:
+    data = user2item(data)
+    item = dict(await item_collection.find_one({"_id": data["id"]}))
+    if item and item["password"] == data["password"]:
+        return True
+    else:
+        return False

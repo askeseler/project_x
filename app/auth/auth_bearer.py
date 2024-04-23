@@ -5,7 +5,8 @@ from .auth_handler import decodeJWT
 
 
 class JWTBearer(HTTPBearer):
-    def __init__(self, auto_error: bool = True):
+    def __init__(self, auto_error: bool = True,  condition = {}):
+        self.condition = condition
         super(JWTBearer, self).__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
@@ -21,9 +22,10 @@ class JWTBearer(HTTPBearer):
 
     def verify_jwt(self, jwtoken: str) -> bool:
         isTokenValid: bool = False
-
         try:
             payload = decodeJWT(jwtoken)
+            for k, v in self.condition.items():
+                assert payload[k] == v
         except:
             payload = None
         if payload:

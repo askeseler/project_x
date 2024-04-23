@@ -42,9 +42,9 @@ class YtShortsScraper {
         open_cmt.click();
 
         let panels = document.getElementsByClassName("ytd-reel-video-renderer watch-while-engagement-panel ytd-reel-video-renderer");
-        for (let p of Array.from(panels)) { p.style.left = "-10%"; p.style.opacity = 0 };
+        //for (let p of Array.from(panels)) { p.style.left = "-10%"; p.style.opacity = 0 };
         panels = document.getElementsByClassName("reel-video-in-sequence style-scope ytd-shorts");
-        for (let p of Array.from(panels)) p.style.right = 0;
+        //for (let p of Array.from(panels)) p.style.right = 0;
     }
 
     text2num(text) {

@@ -1,0 +1,44 @@
+.flex-container-settings {
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    text-align: center;
+    height: 100%
+  }
+  
+  .settings-c1 {
+    flex: 50%;
+    float: right;
+    border-right: 1px solid lightslategray;
+  }
+  
+  .settings-c2 {
+    flex: 50%;
+    float: left;
+  }
+
+  .settings_input {
+    width: 80%;
+    height: 30px;
+    border-radius: 5px;
+    box-shadow: none;
+    border: 1px solid #ced6e0;
+    transition: all 0.3s ease-in-out;
+    font-size: 12px;
+    padding: 5px 15px;
+    background: none;
+    color: #1a3b5d;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.settings_input_label {
+  font-size: 10px;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #1a3b5d;
+  width: 100%;
+  display: block;
+  user-select: none;
+  text-align: left;
+  padding-left: 12%;
+}

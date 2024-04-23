@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import MainScreen from "./MainScreen";
 import 'semantic-ui-css/semantic.min.css'
 
+window.api = "http://localhost:8081";
 class App extends React.Component {
   render() {
     return (
@@ -24,3 +25,11 @@ ReactDOM.render(
   </React.StrictMode>,
   rootElement
 );
+
+
+/*ReactDOM.render(
+  <GoogleReCaptchaProvider reCaptchaKey="6LdlucIpAAAAAE-4EBPBJD_cyJgbrWlYo3qvi-hj">
+    <App/>
+  </GoogleReCaptchaProvider>,
+  rootElement
+);*/

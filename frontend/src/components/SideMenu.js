@@ -11,30 +11,34 @@ import users_icon from './icons/users_icon.svg';
 function SideMenu(props) {
     return (
         <div className="menu">
+            <a href="AppDataLatestContents">
             <div className="sidemenuitem">
                 <div className="sidemenuitem_panel">
                     <img className="sidemenuitem_icon" src={database_icon} alt="" />
                 </div>
                 <div className="sidemenuitem_text">Data</div>
-            </div>
+            </div></a>
+            <a href="DashboardPage">
             <div className="sidemenuitem">
                 <div className="sidemenuitem_panel">
-                    <img className="sidemenuitem_icon" src={dashboard_icon} alt="" />
+                <img className="sidemenuitem_icon" src={dashboard_icon} alt="" />
                 </div>
                 <div className="sidemenuitem_text">Dashboard</div>
-            </div>
+            </div></a>
+            <a href="UsersPage">
             <div className="sidemenuitem">
                 <div className="sidemenuitem_panel">
-                    <img className="sidemenuitem_icon" src={users_icon} alt="" />
+                <img className="sidemenuitem_icon" src={users_icon} alt="" />
                 </div>
                 <div className="sidemenuitem_text">Users</div>
-            </div>
+            </div></a>
+            <a href="SettingsPage">
             <div className="sidemenuitem">
                 <div className="sidemenuitem_panel">
                     <img className="sidemenuitem_icon" src={settings_icon} alt="" />
                 </div>
                 <div className="sidemenuitem_text">Settings</div>
-            </div>
+            </div></a>
         </div>
     );
 }

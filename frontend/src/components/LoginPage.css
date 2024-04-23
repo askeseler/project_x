@@ -1,0 +1,22 @@
+h1 {
+    text-align: center;
+  }
+  
+  form {
+    margin: 40px auto;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input {
+    margin-bottom: 20px;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
