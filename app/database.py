@@ -2,6 +2,9 @@ import motor.motor_asyncio
 from bson.objectid import ObjectId
 from decouple import config
 import bcrypt
+from decouple import config
+pwd_salt = config("pwd_salt_str").encode()
+bcrypt.hashpw(b"test", pwd_salt)
 
 MONGO_DETAILS = "mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb"#config("MONGO_DETAILS")  # read environment variable
 
@@ -76,35 +79,62 @@ async def delete_item_db(id: str):
         await item_collection.delete_one({"_id": ObjectId(id)})
         return True
 
-def user2dict(data):
-    data["email"] = data["_id"]
-    del data["_id"]
-    del data["password"]
-    return data
 
-def user2item(data):
+##################### USER MANAGEMENT #################
+
+def dbitem2user(data):
+    item = {
+        "email": data["_id"],
+        "username": data["username"],
+        "role": data["role"],
+    }
+    return item
+
+def user2dbitem(data):
+    data = dict(data)
     if not "username" in data.keys():
         data["username"] = ""
-    data["_id"] = data["email"]
-    del data["email"]
-    return dict(data)
+    if not "role" in data.keys():
+        data["role"] = "user"
+    item = {
+        "role": data["role"],
+        "username": data["username"],
+        "_id": data["email"],
+        "password": data["password"]
+    }
+    return item
 
 # Add a new user into to the database
 async def add_user_db(data: dict) -> dict:
-    data["password"] = bcrypt.hashpw(data["password"].encode(), bcrypt.gensalt())
-    data = user2item(data)
+    data = user2dbitem(data)
+    data["password"] = bcrypt.hashpw(data["password"].encode(), pwd_salt)
 
     found = await user_collection.find_one({"_id":data["_id"]})
     if not found:
-        await user_collection.insert_one(data)
+        res = await user_collection.insert_one(data)
+        print(res)
     else:
         await user_collection.replace_one(found, data)
-    return user2dict(data)
+    return dbitem2user(data)
 
 async def verify_user_db(data: dict) -> bool:
-    data = user2item(data)
-    item = dict(await item_collection.find_one({"_id": data["id"]}))
-    if item and item["password"] == data["password"]:
+    data = user2dbitem(data)
+    password = bcrypt.hashpw(data["password"].encode(), pwd_salt)
+    data = await user_collection.find_one({"_id": data["_id"]})
+    print(data["password"])
+    print(password)
+    if data and password == data["password"]:
         return True
     else:
         return False
+
+# Retrieve all items present in the database
+async def get_users_db():
+    items = []
+    async for item in user_collection.find():
+        items.append(dbitem2user(item))
+    return items
+
+async def delete_all_users_db():
+    await user_collection.delete_many({})
+    return {}

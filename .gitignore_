@@ -1,0 +1,6 @@
+/frontend/node_modules/
+/db
+/secret.txt
+__pycache__/
+/app/__pycache__/
+/app/auth/__pycache__/
