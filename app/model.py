@@ -24,7 +24,7 @@ class ItemSchema(BaseModel):
 
 class UserChangePwdSchema(BaseModel):
     email: EmailStr = Field(...)
-    fullname: str = Field(...)
+    username: str = Field(...)
     password: str = Field(...)
     token: str = Field(...)
 
@@ -32,14 +32,14 @@ class UserChangePwdSchema(BaseModel):
         schema_extra = {
             "example": {
                 "email": "michael@x.com",
-                "fullname": "michael",
+                "username": "michael",
                 "password": "weakpassword",
                 "token": "b327d834c7d8347a8"
             }
         }
 
 class UserSchema(BaseModel):
-    fullname: str = Field(...)
+    username: str = Field(...)
     email: EmailStr = Field(...)
     role: str = Field(...)
     password: str = Field(...)
@@ -47,7 +47,7 @@ class UserSchema(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "fullname": "Michael",
+                "username": "Michael",
                 "email": "michael@x.com",
                 "password": "weakpassword",
                 "role": "admin"
@@ -57,13 +57,11 @@ class UserSchema(BaseModel):
 class UserLoginSchema(BaseModel):
     email: EmailStr = Field(...)
     password: str = Field(...)
-    role: str = Field(...)
 
     class Config:
         schema_extra = {
             "example": {
                 "email": "michael@x.com",
                 "password": "weakpassword",
-                "role": "admin"
             }
         }

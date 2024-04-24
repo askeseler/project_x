@@ -4,9 +4,9 @@ import { useRef, useState } from "react";
 import ReCAPTCHA from 'react-google-recaptcha'
 import Cookies from 'universal-cookie';
 import env from "./env.json"
-let REACT_APP_SITE_KEY = env.REACT_APP_SITE_KEY;
+const page_cookies = new Cookies();
 
-const cookies = new Cookies();
+let REACT_APP_SITE_KEY = env.REACT_APP_SITE_KEY;
 
 function disableScrolling(){
   var x=window.scrollX;
@@ -35,19 +35,16 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
   const recaptcha = useRef();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [pwd, setPwd] = useState("");
 
   let url;
   let success_msg;
-  if(loginOrSignUp === "sign_up"){
+
    success_msg = "A Mail was sent to your address. Check the inbox and follow the instructions to complete the registration.";
-   url = window.api + "/user/send_sign_up_mail"
-  }
-  else if(loginOrSignUp === "log_in"){
-    success_msg = "A Mail was sent to your address. Check the inbox and follow the instructions to complete the registration.";
-    url = window.api + "/user/login"
-  }
+   let signup_url = window.api + "/user/send_sign_up_mail";
+   let login_url = window.api + "/user/login";
   
-  async function submitForm(event) {
+  async function sendRegistrationLink(event) {
     event.preventDefault();
     const captchaValue = recaptcha.current.getValue();
     //console.log(JSON.stringify({ captchaValue }));
@@ -57,7 +54,7 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
       console.log("verifying via backend")
       let body = { captchaValue };
       body["email"] = email;
-      const res = await fetch(url, {
+      const res = await fetch(signup_url, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
@@ -73,13 +70,39 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
     }
   }
 
+  async function sendLogin(event) {
+    event.preventDefault();
+    const captchaValue = recaptcha.current.getValue();
+    if (!captchaValue) {
+      alert("Please verify the reCAPTCHA!");
+    } else {
+      let body = { captchaValue };
+      body["email"] = email;
+      body['password'] = pwd;
+      const res = await fetch(login_url, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      const token = await res.json();
+      if (token) {
+        page_cookies.set("access_token", token["access_token"]);
+        window.location.href = "AppDataLatestContents";
+      } else {
+        alert("Login failed.");
+      }
+    }
+  }
+
   if (loginOpen && loginOrSignUp==="sign_up"){
   return (
     <div style={login_style}>
     <div style={{transform:"translateY(10%)"}}>
       <h1>Sign up via email</h1>
       <div onClick={()=>closeLogin()} style={{color:"red", position:"relative", transform: "translate(93%, -320%)", cursor:"pointer"}}>❌</div>
-      <form onSubmit={submitForm}>
+      <form onSubmit={sendRegistrationLink}>
         <input
           name="Email"
           type={"email"}
@@ -109,7 +132,7 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
       <div style={{transform:"translateY(10%)"}}>
         <h1>Log in to your account</h1>
         <div onClick={()=>closeLogin()} style={{color:"red", position:"relative", transform: "translate(93%, -320%)", cursor:"pointer"}}>❌</div>
-        <form onSubmit={submitForm}>
+        <form onSubmit={sendLogin}>
           <input
             name="Email"
             type={"email"}
@@ -120,11 +143,9 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
           />
           <input
             name="Name"
-            type={"name"}
-            value={name}
+            type="password"
             required
-            placeholder="Joe"
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => setPwd(event.target.value)}
           />
           <button type="submit">Login</button>
           <ReCAPTCHA ref={recaptcha} sitekey={REACT_APP_SITE_KEY} />

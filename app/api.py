@@ -53,13 +53,13 @@ async def get_items() -> dict:
     return {"items":items}
 
 
-@app.get("/item/{no}", tags=["item"])
+@app.get("/item/{no}", tags=["items"])
 async def get_single_item(no: int) -> dict:
     item = await get_item_db(no)
     return {"item":item}
 
 #@app.post("/add_item", dependencies=[Depends(JWTBearer())], tags=["add_item"])
-@app.post("/add_item", tags=["add_item"])
+@app.post("/add_item", tags=["items"])
 async def add_post(item: ItemSchema) -> dict:
     item = item.dict()
     date = item["date"]
@@ -67,6 +67,11 @@ async def add_post(item: ItemSchema) -> dict:
     item["date"] = datetime.strptime(date, f).replace(microsecond=0)
     item = await add_item_db(item)
     return {"item":item}
+
+########################## USER MANAGEMENT ####################
+@app.get("/user/list_all", tags=["user_management"])
+async def users_list():
+    return await get_users_db()
 
 @app.post("/user/change_password", tags=["user_management"])
 async def change_password(data: UserChangePwdSchema):
@@ -76,8 +81,8 @@ async def change_password(data: UserChangePwdSchema):
         raise HTTPException(status_code=401, detail="Sign up token invalid.")
     else:
         sign_up_tokens.remove(sign_up_token)
-        if not "fullname" in data.keys():
-            data["fullname"] = ""
+        if not "username" in data.keys():
+            data["username"] = ""
         data["role"] = "user"
         return await add_user_db(data)
         
@@ -89,7 +94,6 @@ def send_gmail(subject, body, sender, recipients, password):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
        smtp_server.login(sender, password)
        smtp_server.sendmail(sender, recipients, msg.as_string())
-    print("Message sent!")
 
 @app.post("/user/send_sign_up_mail", tags=["user_management"])
 async def send_signup_mail(request: Request):
@@ -122,29 +126,28 @@ async def create_user(user: UserSchema = Body(...)):
     #replace with db call, making sure to hash the password first
     return signJWT(dict(user))
 
-@app.post("/user/login", tags=["user_managent"])
+@app.post("/user/login", tags=["user_management"])
 async def user_login(user: UserLoginSchema = Body(...)):
-    json = await request.json()
-    response = requests.post(url = recaptcha_url, data = {'secret': recaptcha_secret_key, 'response': json["captchaValue"]})
-    if response.json().get('success', False):
-        if verify_user_db(user):
-            return signJWT(dict(user))
-        else:
-            raise HTTPException(status_code=401, detail="Invalid credentials")
+    print("user login try")
+    if await verify_user_db(user):
+        return signJWT(dict(user))
     else:
-        HTTPException(status_code=401, detail="Invalid Captcha Token")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
-@app.get("/pwd_token")
+@app.get("/pwd_token", tags=["user_management"])
 def pwd_token(token: str = "", email: str = ""):
-    print(token)
     print(email.replace("%40", "@"))
     rr = RedirectResponse('SettingsPage', status_code=303)
     rr.set_cookie(key="new_pwd_token", value=token)
     rr.set_cookie(key="email", value=email)
     return rr
 
+@app.delete("/user/delete_all", tags=["user_management"])
+async def delete_all_users():
+    return await delete_all_users_db()
 
-@app.get("{full_path:path}")
+######################## STATIC FILES #########################
+@app.get("{full_path:path}", tags=["static_files_frontend"])
 async def catch_all(request: Request, full_path: str):
     directory="frontend/build/"
     full_path = directory + full_path
@@ -153,3 +156,4 @@ async def catch_all(request: Request, full_path: str):
     else:
         full_path = directory+"index.html"
         return FileResponse(full_path)
+
