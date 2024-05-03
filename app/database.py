@@ -121,8 +121,6 @@ async def verify_user_db(data: dict) -> bool:
     data = user2dbitem(data)
     password = bcrypt.hashpw(data["password"].encode(), pwd_salt)
     data = await user_collection.find_one({"_id": data["_id"]})
-    print(data["password"])
-    print(password)
     if data and password == data["password"]:
         return True
     else:

@@ -36,11 +36,11 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
+  const [sucessMsgSignUp, setSuccessMsgSignUp] = useState("");
+  const [sucessMsgLogIn, setSucessMsgLogIn] = useState("");
 
   let url;
-  let success_msg;
 
-   success_msg = "A Mail was sent to your address. Check the inbox and follow the instructions to complete the registration.";
    let signup_url = window.api + "/user/send_sign_up_mail";
    let login_url = window.api + "/user/login";
   
@@ -49,7 +49,7 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
     const captchaValue = recaptcha.current.getValue();
     //console.log(JSON.stringify({ captchaValue }));
     if (!captchaValue) {
-      alert("Please verify the reCAPTCHA!");
+      setSuccessMsgSignUp("Please verify the reCAPTCHA!");
     } else {
       console.log("verifying via backend")
       let body = { captchaValue };
@@ -62,11 +62,10 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
         },
       });
       const success = await res.json();
-      if (success) {
-        alert(success_msg);
-      } else {
-        alert("reCAPTCHA validation failed!");
-      }
+        if (res.status === 401)setSucessMsgLogIn("Invalid credentials!");
+        else if (res.status === 429)setSucessMsgLogIn("reCAPTCHA validation failed!");
+        else if (res.status === 200)setSuccessMsgSignUp("A Mail was sent to your address. Check the inbox and follow the instructions to complete the registration.");
+        else setSucessMsgLogIn("Unexpected return value");
     }
   }
 
@@ -74,7 +73,7 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
     event.preventDefault();
     const captchaValue = recaptcha.current.getValue();
     if (!captchaValue) {
-      alert("Please verify the reCAPTCHA!");
+      sucessMsgLogIn("Please verify the reCAPTCHA!");
     } else {
       let body = { captchaValue };
       body["email"] = email;
@@ -86,14 +85,12 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
           "content-type": "application/json",
         },
       });
-      const token = await res.json();
-      if (token) {
-        page_cookies.set("access_token", token["access_token"]);
-        window.location.href = "AppDataLatestContents";
-      } else {
-        alert("Login failed.");
-      }
+      if (res.status === 401)setSucessMsgLogIn("Invalid credentials!")
+      else if (res.status === 429)setSucessMsgLogIn("reCAPTCHA validation failed!")
+      else if (res.status === 200){console.log(res);window.location.href = "AppDataLatestContents"}
+      else setSucessMsgLogIn("Unexpected return value");
     }
+    
   }
 
   if (loginOpen && loginOrSignUp==="sign_up"){
@@ -121,6 +118,8 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
         />
         <button type="submit">Sign up</button>
         <ReCAPTCHA ref={recaptcha} sitekey={REACT_APP_SITE_KEY} />
+
+        <div>{sucessMsgSignUp}</div>
       </form>
     </div>
   </div>
@@ -149,6 +148,7 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
           />
           <button type="submit">Login</button>
           <ReCAPTCHA ref={recaptcha} sitekey={REACT_APP_SITE_KEY} />
+          <div>{sucessMsgLogIn}</div>
         </form>
       </div>
     </div>
