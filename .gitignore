@@ -4,3 +4,5 @@
 __pycache__/
 /app/__pycache__/
 /app/auth/__pycache__/
+/frontend/src/components/env.json
+/.env
