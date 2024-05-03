@@ -17,23 +17,21 @@ function cookies2state(cookies, setters){
 }
 
 function SettingsPage(props) {
-    const rusername = useRef();
+    const remail = useRef();
     const rpwd = useRef();
     const rpwd_repeat = useRef();
 
     const [email, set_email] = useState();
-    const [new_pwd_token, set_new_pwd_token] = useState(0);
+    const [user_has_token, set_user_has_token] = useState(0);
 
-    cookies2state(["email", "new_pwd_token"],[set_email, set_new_pwd_token]);
+    cookies2state(["user_email", "user_has_token"],[set_email, set_user_has_token]);
 
     let url = window.api + "/user/change_password"
     async function update_password(){
         let pwd = rpwd.current.value;
         let pwd_repeat = rpwd_repeat.current.value;
-        let username = rusername.current.value;
         if(pwd == pwd_repeat){
-            let body = {email:email, token:new_pwd_token, password:pwd, username:username}
-            console.log(body);
+            let body = {password:pwd, email:"notme@butcookie.com"}
             const res = await fetch(url, {
                 method: "POST",
                 body: JSON.stringify(body),
@@ -52,12 +50,9 @@ function SettingsPage(props) {
         <div className="content" style={{ padding: "50px" }}>
             <div class={"flex-container-settings"}>
                 <div class={"settings-c1"}>
+                    <div>Change Password</div>
                 <label for="email" class="settings_input_label">Email Address</label>
-                <input type="text" id="email" autocomplete="off" class="settings_input" value={email}></input>
-                <label for="token" class="settings_input_label">Password Update Token</label>
-                <input type="text" id="token" autocomplete="off" class="settings_input" value={new_pwd_token}></input>
-                <label for="username" class="settings_input_label">Name</label>
-                <input ref={rusername} type="text" id="username" data-ref="cardNumber" autocomplete="off" class="settings_input"></input>
+                <input type="text" readonly="readonly" id="email" autocomplete="off" class="settings_input" value={email}></input>
                 <label for="pwd" class="settings_input_label">Password</label>
                 <input ref = {rpwd} type="password" id="pwd" data-ref="cardNumber" autocomplete="off" class="settings_input"></input>
                 <label for="pwd_repeat" class="settings_input_label">Repeat Password</label>
