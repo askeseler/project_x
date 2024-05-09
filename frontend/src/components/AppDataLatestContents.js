@@ -79,13 +79,9 @@ function renderRow(dict) {
 
 function AppDataLatestContents(props) {
   const [data, setData] = useState([]);
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8081/items'); // Replace with your API endpoint
+      const response = await fetch(window.api+'/items'); // Replace with your API endpoint
       if (!response.ok) {
         throw new Error('Network response was not ok.');
       }
@@ -95,6 +91,8 @@ function AppDataLatestContents(props) {
       console.log(error);
     }
   };
+
+  useEffect(() => {fetchData()}, []);
 
   return (
     <div className="content" style={{padding: "50px"}}>

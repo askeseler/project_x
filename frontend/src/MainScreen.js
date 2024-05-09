@@ -10,6 +10,8 @@ import './MainScreen.css';
 
 //window.onload = function() {console.log(window.location.pathname.split('/').slice(1));}
 
+const key = process.env.REACT_APP_API_KEY;
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -38,6 +40,7 @@ class App extends React.Component {
   }
 
   render() {
+
     if (this.state.page === "LandingPage") return <LandingPage />;
     if (this.state.page == "AppDataLatestContents") {
       return (<div className="container" style={{ width: "100%" }}>

@@ -3,11 +3,13 @@ import ReactDOM from "react-dom";
 import MainScreen from "./MainScreen";
 import 'semantic-ui-css/semantic.min.css'
 
-window.api = "http://localhost:8081";
+window.api = window.location.protocol  + '//' + window.location.host//"http://localhost:8081";
 class App extends React.Component {
   render() {
     return (
+      <div style={{overflow: "hidden"}}>
         <MainScreen/>
+      </div>
     );
   }
 }

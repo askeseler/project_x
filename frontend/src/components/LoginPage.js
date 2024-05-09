@@ -3,10 +3,9 @@ import "./LoginPage.css"
 import { useRef, useState } from "react";
 import ReCAPTCHA from 'react-google-recaptcha'
 import Cookies from 'universal-cookie';
-import env from "./env.json"
 const page_cookies = new Cookies();
 
-let REACT_APP_SITE_KEY = env.REACT_APP_SITE_KEY;
+let REACT_APP_SITE_KEY = process.env.REACT_APP_SITE_KEY;// Must be defined as an environment variable
 
 function disableScrolling(){
   var x=window.scrollX;
@@ -20,8 +19,6 @@ function enableScrolling(){
 
 const login_style = {
   position: 'fixed',
-  height: "50%",
-  width: "50%",
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -96,7 +93,7 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
   if (loginOpen && loginOrSignUp==="sign_up"){
   return (
     <div style={login_style}>
-    <div style={{transform:"translateY(10%)"}}>
+    <div style={{transform:"translateY(10%)", paddingLeft: "10vh", paddingRight: "10vh", paddingBottom: "10vh"}}>
       <h1>Sign up via email</h1>
       <div onClick={()=>closeLogin()} style={{color:"red", position:"relative", transform: "translate(93%, -320%)", cursor:"pointer"}}>❌</div>
       <form onSubmit={sendRegistrationLink}>

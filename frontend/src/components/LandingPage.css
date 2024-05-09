@@ -8,19 +8,19 @@
   .flex-item-left {
     background-color: #f1f1f1;
     padding: 30px;
-    flex: 50%;
+    flex: 33%;
   }
   
   .flex-item-middle {
     background-color: #f1f1f1;
     padding: 30px;
-    flex: 50%;
+    flex: 33%;
   }
   
   .flex-item-right {
     background-color: #f1f1f1;
     padding: 30px;
-    flex: 50%;
+    flex: 33%;
   }
 
   @media (max-width: 800px) {
@@ -32,8 +32,8 @@
   .callForActionImg {
     display: block;
     border: 0;
-    height: auto;
-    width: 40%;
+    height: 20vh;
+    width: auto;
     padding: 10px
   }
 
@@ -70,7 +70,8 @@ li{
 
 .freeTrialButton {
   height: 40px;
-  width: 250px;
+  padding-left: 10px;
+  padding-right: 10px;
   font-size: 0.7em;
   font-weight: bold;
   letter-spacing: 0.5px;
@@ -78,6 +79,7 @@ li{
   border: 2px solid darkgray;
   border-radius: 50px;
   background: transparent;
+  transform: translateY(-60px);
 }
 
 .freeTrialButton:hover{

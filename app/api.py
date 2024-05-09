@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse, RedirectResponse
 from fastapi import HTTPException
 from app.model import ItemSchema, UserSchema, UserLoginSchema
 from app.auth.auth_bearer import JWTBearer
-from app.auth.auth_handler import signJWT
+from app.auth.auth_handler import signJWT, encodeJWT, verifyJWT, decodeJWT
 import app.database
 from app.database import *
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,22 +22,15 @@ import smtplib
 from email.mime.text import MIMEText
 import secrets
 
-DEBUG = True
-
-with open("./frontend/src/components/env.json") as f:
-    settings = json.loads(f.read())
-    SITE_URL = settings["SITE_URL"]
-    GMAIL_PWD = settings["GMAIL_PWD"]
-
-sign_up_tokens = ['test&michael.werner.gerstenberger@gmail.com']
+DEBUG = False
+sign_up_tokens = ['']
 
 #Recaptcha stuff
 recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'
-recaptcha_secret_key = None
-with open("./frontend/src/components/env.json") as f:
-    recaptcha_secret_key = json.loads(f.read())["SITE_SECRET"]
+recaptcha_secret_key = os.environ["SITE_SECRET"]
 
-#users = [{'fullname': 'Michael G', 'email': 'michael@x.com', 'password': 'weakpassword', 'role':'admin'}]
+# Password for GMAIL
+GMAIL_PWD = os.environ["GMAIL_PWD"]
 
 app = FastAPI()
 origins = ["*"]
@@ -95,51 +88,66 @@ async def send_signup_mail(request: Request):
     json = await request.json()
     response = requests.post(url = recaptcha_url, data = {'secret': recaptcha_secret_key, 'response': json["captchaValue"]}).json()
     if not response["success"]:
-        raise HTTPException(status_code=401, detail="Sign up token invalid.")
+        raise HTTPException(status_code=401, detail=response)
     else:
-        new_pwd_token = secrets.token_urlsafe(30*3//4)
-        email = json["email"]
+        base_url = str('{uri.scheme}://{uri.netloc}/'.format(uri=request.url))
+        #access_token = secrets.token_urlsafe(30*3//4)
+        #sign_up_token = access_token + "&" + email
+        #sign_up_tokens.append(sign_up_token)
+
+        user = {"email":json["email"], "role":"sign_up"}
+        sign_up_token = encodeJWT(user)
+        slug = "new_pwd_redirect?access_token=" + sign_up_token#new_pwd_token + "&email=" + email.replace("@", "%40")
+        signup_url = base_url + slug
+
         subject = "Signup to socialmediahub.pro"
-        body = "To complete registration and set yout account password use this link:\n" + SITE_URL + "new_pwd_redirect?new_pwd_token=" + new_pwd_token + "&email=" + email.replace("@", "%40") + "\n Cheers and have fun!"
+        body = "To complete registration and set yout account password use this link:\n" + signup_url + "\n Cheers and have fun!"
         sender = "hordeum.berlin@gmail.com"
         recipients = [json["email"]]
-        sign_up_token = new_pwd_token + "&" + email
-        sign_up_tokens.append(sign_up_token)
+
         send_gmail(subject, body, sender, recipients, GMAIL_PWD)
         return JSONResponse({})
 
 @app.get("/new_pwd_redirect", tags=["user_management"])
-def new_pwd_redirect(new_pwd_token: str = "", email: str = ""):
+def new_pwd_redirect(access_token: str = ""):
     """ Sets cookies and redirects to SettingsPage """
-    email = email.replace("%40", "@")
     rr = RedirectResponse('SettingsPage', status_code=303)
-    set_http_only_cookie(rr, key="new_pwd_token", value=new_pwd_token)
-    set_http_only_cookie(rr, key="email", value=email)
-    rr.set_cookie(key="user_has_token", value="true")
-    rr.set_cookie(key="user_email", value=email)#will be transferred to state in frontend
+    set_http_only_cookie(rr, key="access_token", value=access_token)
+    #set_http_only_cookie(rr, key="email", value=email)
+    #rr.set_cookie(key="user_has_token", value="true")
+    #rr.set_cookie(key="user_email", value=email)#will be transferred to state in frontend
     return rr
+
+@app.get("/user/details", dependencies=[Depends(JWTBearer([{"role":"sign_up"},{"role":"user"}]))], tags=["user_management"])
+def user_details(request: Request):
+    return decodeJWT(request.cookies["access_token"], True)
 
 @app.post("/user/change_password", tags=["user_management"])
 async def change_password(request: Request, data: UserLoginSchema):
     data = data.dict()
-    new_pwd_token: str = request.cookies.get("new_pwd_token")
-    email: str = request.cookies.get("email")
-    sign_up_token = new_pwd_token + "&" + email
-    if not sign_up_token in sign_up_tokens:
-        raise HTTPException(status_code=401, detail="Sign up token invalid.")
+    access_token: str = request.cookies.get("access_token")
+    email = decodeJWT(access_token, True)["email"]
+    #sign_up_token = access_token + "&" + email
+    #if not sign_up_token in sign_up_tokens:
+    #    raise HTTPException(status_code=401, detail="Sign up token invalid.")
+    if not verifyJWT(access_token, {}, ignore_expiration = True):
+        raise HTTPException(status_code=401, detail="Access token invalid.")
     else:
-        sign_up_tokens.remove(sign_up_token)
         if not "username" in data.keys():
             data["username"] = ""
         data["role"] = "user"
         data["email"] = email
-        return await add_user_db(data)
+        user = await add_user_db(data)
+        response = JSONResponse(user)#Sign in user
+        access_token = signJWT(user)["access_token"]
+        set_http_only_cookie(response, "access_token", access_token)
+        return response
 
 def set_http_only_cookie(response, key, value):
     """ Sets hhtp.only cookie (readable by backend only and thus invulnerable to XSS attacks). 
         To make sure XSRF attacks are not possible in production same-site cookies must be used and they should be transferred securely"""
     if not DEBUG:
-        response.set_cookie(key=key, value=value, httponly=True, secure=True, SameSite="strict")
+        response.set_cookie(key=key, value=value, httponly=True, secure=True, samesite="strict")
     else:
         response.set_cookie(key=key, value=value, httponly=True)
 
@@ -147,32 +155,21 @@ def set_http_only_cookie(response, key, value):
 #async def verify_captcha(captchaValue = Body(..., embed=True)):
 #    response = requests.post(url = recaptcha_url, data = {'secret': recaptcha_secret_key, 'response': captchaValue})
 #    return response.json().get('success', False)
-@app.post("/user/test_token", tags =["user_management"])
-async def set_token(user: UserLoginSchema = Body(...)):
-    """
-            const response = await fetch("http://localhost:8081/user/test_token", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-            email: "m@g.com", password:"opo"
-            }),
-        });
-        const json = await response.json();
-        console.log(json);
-    """
-    response = JSONResponse(content={})
-    access_token = signJWT(dict(user))
-    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True) #TODO set secure=true, max_age etc.
+
+@app.get("/user/http_token", tags=["user_management"])
+async def http_token(request: Request):
+    if DEBUG:
+        access_token = request.cookies.get("access_token")  #changed to accept access token from httpOnly Cookie
+        return json.loads('"'+access_token+'"')
+    else:
+        raise HTTPException(403, "Not allowed")
+
+@app.get("/user/logout", tags=["user_management"])
+async def logout(request: Request, response: Response):
+    response = JSONResponse({})
+    for k in request.cookies.keys():
+        response.delete_cookie(k)
     return response
-
-@app.get("/user/test_token", tags=["user_management"])
-async def read_token(request: Request):
-    access_token: str = request.cookies.get("access_token")  #changed to accept access token from httpOnly Cookie
-    return {"access_token": access_token}
-
 
 #@app.post("/user/signup", dependencies=[Depends(JWTBearer(condition ={"role":"admin"}))], tags=["user_management"])
 #async def create_user(user: UserSchema = Body(...)):
@@ -187,7 +184,8 @@ async def user_login(request: Request, user: UserLoginSchema):
         raise HTTPException(status_code=429, detail="ReCaptcha Failed")
     if await verify_user_db(user):
         response = JSONResponse(content={})
-        access_token = signJWT(dict(user))
+        user = dict(user)
+        access_token = signJWT(user)["access_token"]
         #response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True) #TODO set secure=true, "SameSite" to "Strict", max_age etc.
         set_http_only_cookie(response, "access_token", access_token)
         return response
