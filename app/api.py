@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse, RedirectResponse
 from fastapi import HTTPException
 from app.model import ItemSchema, UserSchema, UserLoginSchema
 from app.auth.auth_bearer import JWTBearer
+from app.auth.rate_limiter import RateLimiter
 from app.auth.auth_handler import signJWT, encodeJWT, verifyJWT, decodeJWT
 import app.database
 from app.database import *
@@ -16,6 +17,7 @@ import json
 import os
 from fastapi import Response
 from fastapi.responses import JSONResponse
+import re
 
 #Email stuff
 import smtplib
@@ -43,20 +45,41 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/plots/dist_comments/", tags=["plots"])
+async def get_dist_comments():
+    ns, bin_bounds = await get_dist_of("n_comments", 10, (0,10000))
+    return JSONResponse([{"Value": str(n), "Label":str(int(b))} for n, b in zip(ns, bin_bounds)])
+
+@app.get("/plots/dist_likes/", tags=["plots"])
+async def get_dist_likes():
+    ns, bin_bounds = await get_dist_of("n_likes", 10, (0,1000))
+    return JSONResponse([{"Value": str(n), "Label":str(int(b))} for n, b in zip(ns, bin_bounds)])
+
+@app.get("/plots/daily_user_activity/", tags=["plots"])
+async def daily_user_activity():
+    res = await get_daily_user_activity()
+    return res
+
+@app.get("/plots/scatterplot_comments_likes/", tags=["plots"])
+async def get_scatterplot_likes_comments():
+    items = await get_random_set()
+    n_likes = [i["n_likes"] for i in items]
+    n_comments = [i["n_comments"] for i in items]
+    return JSONResponse([{"x": str(int(a)), "y":str(int(b))} for a, b in zip(n_likes, n_comments)])
+
 #@app.get("/items", tags=["items"])
 @app.get("/items", dependencies=[Depends(JWTBearer())], tags=["items"])
 async def get_items() -> dict:
     items = await get_items_db()
     return {"items":items}
 
-
-@app.get("/item/{no}", tags=["items"])
+@app.get("/item/{no}", dependencies=[Depends(JWTBearer(credentials_in_header = True))], tags=["items"])
 async def get_single_item(no: int) -> dict:
     item = await get_item_db(no)
     return {"item":item}
 
-#@app.post("/add_item", dependencies=[Depends(JWTBearer())], tags=["add_item"])
-@app.post("/add_item", tags=["items"])
+#@app.post("/add_item", tags=["items"])
+@app.get("/add_item", dependencies=[Depends(JWTBearer(credentials_in_header = True)), Depends(RateLimiter(requests_limit=10, time_window=10))], tags=["items"])
 async def add_post(item: ItemSchema) -> dict:
     item = item.dict()
     date = item["date"]
@@ -70,7 +93,7 @@ async def add_post(item: ItemSchema) -> dict:
     return {"item":item}
 
 ########################## USER MANAGEMENT ####################
-@app.get("/user/list_all", tags=["user_management"])
+@app.get("/user/list_all", dependencies=[Depends(JWTBearer([{"role":"admin"}]))], tags=["user_management"])
 async def users_list():
     return await get_users_db()
         
@@ -118,9 +141,16 @@ def new_pwd_redirect(access_token: str = ""):
     #rr.set_cookie(key="user_email", value=email)#will be transferred to state in frontend
     return rr
 
-@app.get("/user/details", dependencies=[Depends(JWTBearer([{"role":"sign_up"},{"role":"user"}]))], tags=["user_management"])
+@app.get("/user/details", dependencies=[Depends(JWTBearer([{"role":"sign_up"},{"role":"user"},{"role":"admin"}]))], tags=["user_management"])
 def user_details(request: Request):
     return decodeJWT(request.cookies["access_token"], True)
+
+def validate_password(pw):
+    return bool(re.search(r'[A-Z]', pw)) and \
+           bool(re.search(r'[a-z]', pw)) and \
+           bool(re.search(r'[0-9]', pw)) and \
+           bool(re.search(r'[^A-Za-z0-9]', pw)) and \
+           len(pw) > 8
 
 @app.post("/user/change_password", tags=["user_management"])
 async def change_password(request: Request, data: UserLoginSchema):
@@ -133,6 +163,8 @@ async def change_password(request: Request, data: UserLoginSchema):
     if not verifyJWT(access_token, {}, ignore_expiration = True):
         raise HTTPException(status_code=401, detail="Access token invalid.")
     else:
+        if not validate_password(data["password"]):
+            raise HTTPException(status_code, 400, detail="Password does not meet requirements.")
         if not "username" in data.keys():
             data["username"] = ""
         data["role"] = "user"
@@ -151,18 +183,10 @@ def set_http_only_cookie(response, key, value):
     else:
         response.set_cookie(key=key, value=value, httponly=True)
 
-#@app.post("/user/verify", tags=["user_management"])
-#async def verify_captcha(captchaValue = Body(..., embed=True)):
-#    response = requests.post(url = recaptcha_url, data = {'secret': recaptcha_secret_key, 'response': captchaValue})
-#    return response.json().get('success', False)
-
-@app.get("/user/http_token", tags=["user_management"])
-async def http_token(request: Request):
-    if DEBUG:
-        access_token = request.cookies.get("access_token")  #changed to accept access token from httpOnly Cookie
-        return json.loads('"'+access_token+'"')
-    else:
-        raise HTTPException(403, "Not allowed")
+@app.get("/user/api_token", tags=["user_management"])
+async def api_token(request: Request):
+    access_token = signJWT({"owner":"test"})["access_token"]
+    return access_token
 
 @app.get("/user/logout", tags=["user_management"])
 async def logout(request: Request, response: Response):
@@ -170,11 +194,6 @@ async def logout(request: Request, response: Response):
     for k in request.cookies.keys():
         response.delete_cookie(k)
     return response
-
-#@app.post("/user/signup", dependencies=[Depends(JWTBearer(condition ={"role":"admin"}))], tags=["user_management"])
-#async def create_user(user: UserSchema = Body(...)):
-#    user = add_user_db(user)
-#    return {}
 
 @app.post("/user/login", tags=["user_management"])
 async def user_login(request: Request, user: UserLoginSchema):
@@ -192,7 +211,7 @@ async def user_login(request: Request, user: UserLoginSchema):
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-@app.delete("/user/delete_all", tags=["user_management"])
+@app.delete("/user/delete_all", dependencies=[Depends(JWTBearer([{"role":"admin"}]))], tags=["user_management"])
 async def delete_all_users():
     return await delete_all_users_db()
 

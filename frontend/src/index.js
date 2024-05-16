@@ -7,9 +7,7 @@ window.api = window.location.protocol  + '//' + window.location.host//"http://lo
 class App extends React.Component {
   render() {
     return (
-      <div style={{overflow: "hidden"}}>
         <MainScreen/>
-      </div>
     );
   }
 }

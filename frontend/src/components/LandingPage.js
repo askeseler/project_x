@@ -15,7 +15,7 @@ class LandingPage extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{overflow: "hidden"}}>
 
                 <div class={"flex-container"} style={{"background": "rgb(28, 29, 29)"}}>
                 <div style={{width: "100vw", float: "right", height: "100%", padding: "10px", display: "flex"}}> 

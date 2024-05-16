@@ -8,6 +8,14 @@ const page_cookies = new Cookies();
 
 const zip = (a, b) => a.map((k, i) => [k, b[i]]);
 
+function validatePassword(pw) {
+    return /[A-Z]/       .test(pw) &&
+           /[a-z]/       .test(pw) &&
+           /[0-9]/       .test(pw) &&
+           /[^A-Za-z0-9]/.test(pw) &&
+           pw.length > 8;
+}
+
 function cookies2state(cookies, setters){
     for(let tuple of zip(cookies, setters)){
         let cookie_val = page_cookies.get(tuple[0]);
@@ -39,6 +47,7 @@ function SettingsPage(props) {
         let pwd = rpwd.current.value;
         let pwd_repeat = rpwd_repeat.current.value;
         if(pwd == pwd_repeat){
+            if (validatePassword(pwd)){
             let body = {password:pwd, email:"n@n.com"}
             const res = await fetch(url, {
                 method: "POST",
@@ -49,8 +58,11 @@ function SettingsPage(props) {
               });
               const success = await res.json();
               alert(JSON.stringify(success));
+            }else{
+                alert("Passwords must match these conditions: At least one uppercase letter. At least one lowercase letter. At least one digit. At least one special symbol. At least 8 signs");
+            }
         }else{
-            alert("Passwords do not match");
+            alert("Passwords do not match.");
         }
     }
 

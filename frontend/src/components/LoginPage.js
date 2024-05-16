@@ -125,7 +125,7 @@ function LoginPage({ loginOpen, closeLogin, loginOrSignUp }){
   if (loginOpen && loginOrSignUp==="log_in"){
     return (
       <div style={login_style}>
-      <div style={{transform:"translateY(10%)"}}>
+      <div style={{transform:"translateY(10%)", paddingLeft: "10vh", paddingRight: "10vh", paddingBottom: "10vh"}}>
         <h1>Log in to your account</h1>
         <div onClick={()=>closeLogin()} style={{color:"red", position:"relative", transform: "translate(93%, -320%)", cursor:"pointer"}}>❌</div>
         <form onSubmit={sendLogin}>

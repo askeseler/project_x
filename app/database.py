@@ -3,6 +3,11 @@ from bson.objectid import ObjectId
 from decouple import config
 import bcrypt
 from decouple import config
+import random
+import numpy as np
+from datetime import datetime
+from datetime import datetime as dt, timedelta as td
+
 pwd_salt = config("pwd_salt_str").encode()
 bcrypt.hashpw(b"test", pwd_salt)
 
@@ -32,10 +37,48 @@ def item2dict(json) -> dict:
         "time_watched": json["time_watched"]
     }
 
+async def get_random_set(n = 1000, seed = 42):
+    count = await item_collection.estimated_document_count()
+    np.random.seed(seed)
+    idxs = np.random.randint(0,count, n)
+    items = []
+    for idx in idxs:
+        item = await item_collection.find().limit(-1).skip(int(idx)).next()
+        items.append(item2dict(item))
+    return items
+
+async def get_dist_of(attr="n_comments", bins = 10, range=(0,10000)):
+    items = await get_random_set()
+    vals = [i[attr] for i in items]
+    n, bin_bounds = np.histogram(vals, bins = bins, range=range)
+    bin_bounds = bin_bounds[1:]
+    return n, bin_bounds
+
+async def get_daily_user_activity(start = '2024-01-01', end = '2024-07-1'):
+    items = []
+    async for item in item_collection.find().sort('date',-1):
+        items.append(item["date"].strftime('%Y-%m-%d'))
+
+    def empty_dates_dict(start = '2024-01-01', end = '2024-07-1'):
+        sd = dt.strptime(start,'%Y-%m-%d')
+        ed = dt.strptime(end,'%Y-%m-%d')
+        delta = ed - sd
+        d = {}
+        for i in range(delta.days+1):
+            d[(sd + td(days=i)).strftime('%Y-%m-%d')] = "0"
+        return d
+
+    unique, counts = np.unique(np.array(items), return_counts=True)
+    d = empty_dates_dict(start, end)
+    for u, c in zip(unique, counts):
+        d[str(u)] = int(c)
+    return [{"date":k,"value":v} for k, v in d.items()]
+
+
 # Retrieve all items present in the database
 async def get_items_db():
     items = []
-    async for item in item_collection.find():
+    async for item in item_collection.find().sort('date',-1).limit(50):
         items.append(item2dict(item))
     return items
 
@@ -44,7 +87,6 @@ async def add_item_db(item_data: dict) -> dict:
     item = await item_collection.insert_one(item_data)
     new_item = await item_collection.find_one({"_id": item.inserted_id})
     return item2dict(new_item)
-
 
 # Retrieve a item with a matching ID
 async def get_item_db(no: str) -> dict:

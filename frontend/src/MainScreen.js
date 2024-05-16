@@ -5,12 +5,13 @@ import ContentHeader from "./components/ContentHeader.js";
 import AppDataLatestContents from "./components/AppDataLatestContents.js"
 import SettingsPage from "./components/SettingsPage.js"
 import LandingPage from "./components/LandingPage.js"
+import DashboardPage from "./components/DashboardPage.js"
+import UsersPage from "./components/UsersPage.js"
+import ExtensionPage from "./components/ExtensionPage.js"
 
 import './MainScreen.css';
 
 //window.onload = function() {console.log(window.location.pathname.split('/').slice(1));}
-
-const key = process.env.REACT_APP_API_KEY;
 
 class App extends React.Component {
   constructor(props) {
@@ -40,7 +41,6 @@ class App extends React.Component {
   }
 
   render() {
-
     if (this.state.page === "LandingPage") return <LandingPage />;
     if (this.state.page == "AppDataLatestContents") {
       return (<div className="container" style={{ width: "100%" }}>
@@ -50,6 +50,21 @@ class App extends React.Component {
     else if (this.state.page == "SettingsPage") {
       return (<div className="container" style={{ width: "100%" }}>
         <Header /><SettingsPage /><ContentHeader tabs={["GENERAL SETTINGS"]} /><SideMenu />
+        </div>)
+    }
+    else if (this.state.page == "DashboardPage") {
+      return (<div className="container1" style={{ width: "100%" }}>
+        <Header /><DashboardPage /><SideMenu />
+        </div>)
+    }
+    else if (this.state.page == "UsersPage") {
+      return (<div className="container1" style={{ width: "100%" }}>
+        <Header /><UsersPage /><SideMenu />
+        </div>)
+    }
+    else if (this.state.page == "ExtensionPage") {
+      return (<div className="container1" style={{ width: "100%" }}>
+        <Header /><ExtensionPage /><SideMenu />
         </div>)
     }
   }
