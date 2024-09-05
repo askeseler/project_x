@@ -20,6 +20,9 @@ class App extends React.Component {
     this.state = { page: this.default_page }
   }
 
+
+  
+
   componentDidMount() {
     // Prevent navigation via href. Change url instead manually and update state.page for conditional rendering.
     //this.setState({page: window.location.href});
@@ -28,7 +31,9 @@ class App extends React.Component {
     this.setState({ page: page });
 
     window.block_navigation = true;
-    window.navigation.addEventListener("navigate", (event) => {
+    //window.navigation.addEventListener("navigate", (event) => {
+      window.addEventListener("popstate", (event) => {
+
       if (window.block_navigation) {
         event.preventDefault();
         let new_slug = new URL(event.destination.url).pathname;
