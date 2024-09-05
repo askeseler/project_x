@@ -38,14 +38,18 @@ def item2dict(json) -> dict:
     }
 
 async def get_random_set(n = 1000, seed = 42):
-    count = await item_collection.estimated_document_count()
-    np.random.seed(seed)
-    idxs = np.random.randint(0,count, n)
-    items = []
-    for idx in idxs:
-        item = await item_collection.find().limit(-1).skip(int(idx)).next()
-        items.append(item2dict(item))
-    return items
+    if False:
+        count = await item_collection.estimated_document_count()
+        np.random.seed(seed)
+        idxs = np.random.randint(0,count, n)
+        items = []
+        for idx in idxs:
+            item = await item_collection.find().limit(-1).skip(int(idx)).next()
+            items.append(item2dict(item))
+        return items
+    else:
+        cursor = item_collection.aggregate([{'$sample': {'size': n}}])
+        return await cursor.to_list(length=None)
 
 async def get_dist_of(attr="n_comments", bins = 10, range=(0,10000)):
     items = await get_random_set()

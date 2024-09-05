@@ -25,7 +25,6 @@ from email.mime.text import MIMEText
 import secrets
 
 DEBUG = False
-sign_up_tokens = ['']
 
 #Recaptcha stuff
 recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -44,6 +43,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.post("/echo/{msg}", tags=["test"])
+async def get_dist_comments(msg : str) -> dict:
+    return {"msg":msg}
 
 @app.get("/plots/dist_comments/", tags=["plots"])
 async def get_dist_comments():
@@ -79,7 +82,7 @@ async def get_single_item(no: int) -> dict:
     return {"item":item}
 
 #@app.post("/add_item", tags=["items"])
-@app.get("/add_item", dependencies=[Depends(JWTBearer(credentials_in_header = True)), Depends(RateLimiter(requests_limit=10, time_window=10))], tags=["items"])
+@app.post("/add_item", dependencies=[Depends(JWTBearer(credentials_in_header = True)), Depends(RateLimiter(requests_limit=10, time_window=10))], tags=["items"])
 async def add_post(item: ItemSchema) -> dict:
     item = item.dict()
     date = item["date"]
@@ -124,7 +127,7 @@ async def send_signup_mail(request: Request):
         signup_url = base_url + slug
 
         subject = "Signup to socialmediahub.pro"
-        body = "To complete registration and set yout account password use this link:\n" + signup_url + "\n Cheers and have fun!"
+        body = "To complete registration and set your account password use this link:\n" + signup_url + "\n Cheers and have fun!"
         sender = "hordeum.berlin@gmail.com"
         recipients = [json["email"]]
 
@@ -185,7 +188,7 @@ def set_http_only_cookie(response, key, value):
 
 @app.get("/user/api_token", tags=["user_management"])
 async def api_token(request: Request):
-    access_token = signJWT({"owner":"test"})["access_token"]
+    access_token = signJWT({"version":"0.0.1"})["access_token"]
     return access_token
 
 @app.get("/user/logout", tags=["user_management"])
